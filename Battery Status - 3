@@ -1,0 +1,87 @@
+total_distance = 0
+battery_percentage = 100
+battery_capacity_km = 372
+distance_per_percent = battery_capacity_km / 100  # 3.72 km per 1%
+battery_drop_step = 62  # Reduce battery every 62 km
+
+distance_since_last_drop = 0
+
+print(f"Total Distance: {total_distance} km | Battery = {battery_percentage}%")
+
+while True:
+    speed_input = input("Enter current speed (in km/h) or 'stop' to end flight: ")
+
+    if speed_input.lower() == 'stop':
+        print("Flight stopped.")
+        break
+
+    try:
+        speed = int(speed_input)
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        continue
+
+    total_distance += speed
+    distance_since_last_drop += speed
+
+    while distance_since_last_drop >= battery_drop_step:
+        battery_percentage -= 16
+        distance_since_last_drop -= battery_drop_step
+
+    print(f"Total Distance: {total_distance} km | {battery_percentage}%")
+
+    if battery_percentage == 20:
+        print("Battery is low..!  ")
+        plugged_in = input("Plugged in? (yes/no): ").strip().lower()
+        if plugged_in == "yes":
+            battery_percentage = 100
+            distance_since_last_drop = 0
+            print("Battery charging... Back to 100% 🔋")
+            continue  # continue loop from top
+
+    if battery_percentage == 4:
+        print("Battery will be  dead soon")
+        plugged_in = input("Plugged in? (yes/no): ").strip().lower()
+        if plugged_in == "yes":
+            battery_percentage = 100
+            distance_since_last_drop = 0
+            print("Battery charging... Back to 100% 🔋")
+            continue
+
+    if battery_percentage <= 0:
+        print("Battery is  dead")
+        print("Battery empty! Emergency landing...")
+        break
+
+
+-- OUTPUT --
+Total Distance: 0 km | Battery = 100%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 62 km | 84%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 124 km | 68%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 186 km | 52%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 248 km | 36%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 310 km | 20%
+Battery is low..!  
+Plugged in? (yes/no): no
+Enter current speed (in km/h) or 'stop' to end flight: 62
+Total Distance: 372 km | 4%
+Battery will be  dead soon
+Plugged in? (yes/no): yes
+Battery charging... Back to 100% 🔋
+Enter current speed (in km/h) or 'stop' to end flight: 150
+Total Distance: 522 km | 68%
+Enter current speed (in km/h) or 'stop' to end flight: 250
+Total Distance: 772 km | 4%
+Battery will be  dead soon
+Plugged in? (yes/no): no
+Enter current speed (in km/h) or 'stop' to end flight: 100
+Total Distance: 872 km | -28%
+Battery is  dead
+Battery empty! Emergency landing...
+
+=== Code Execution Successful ===
