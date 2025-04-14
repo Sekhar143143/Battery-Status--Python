@@ -1,0 +1,63 @@
+total_range_km = 372
+battery_full = 100
+block_km = 62  # 1 block = 62 km
+distance_covered = 0
+battery_percentage = 100
+step_count = 0
+
+while True:
+    speed_input = input("Enter current speed (in km/h) or 'stop' to end flight: ")
+    if speed_input.lower() == 'stop':
+        print("Flight ended.")
+        break
+
+    try:
+        speed = int(speed_input)
+        distance_covered += speed
+
+        expected_blocks = distance_covered // block_km
+        if expected_blocks > step_count:
+            drop = expected_blocks - step_count
+            battery_percentage -= drop * (battery_full // (total_range_km // block_km))
+            step_count = expected_blocks
+
+        if battery_percentage < 0:
+            battery_percentage = 0
+
+        print(f"{speed} km/h | {battery_percentage}%")
+
+        if battery_percentage == 20:
+            print("Battery is low..!  ")
+            print("Pluged in")
+
+        if battery_percentage == 4:
+            print("Battery will be  dead soon")
+
+        if battery_percentage == 0:
+            print("Battery is  dead")
+            print("Battery empty! Emergency landing...")
+            break
+
+    except ValueError:
+        print("Invalid input, please enter a number or 'stop'.")
+
+-- OUTPUT -- 
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 84%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 68%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 52%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 36%
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 20%
+Battery is low..!  
+Pluged in
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 4%
+Battery will be  dead soon
+Enter current speed (in km/h) or 'stop' to end flight: 62
+62 km/h | 0%
+Battery is  dead
+Battery empty! Emergency landing...
